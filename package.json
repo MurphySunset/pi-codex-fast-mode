@@ -1,0 +1,35 @@
+{
+  "name": "pi-codex-fast-mode",
+  "version": "0.1.0",
+  "description": "Pi extension for toggling Codex priority service tier per model",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MurphySunset/pi-codex-fast-mode.git"
+  },
+  "homepage": "https://github.com/MurphySunset/pi-codex-fast-mode#readme",
+  "bugs": {
+    "url": "https://github.com/MurphySunset/pi-codex-fast-mode/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "codex",
+    "fast-mode"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/fast-mode.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "files": [
+    "extensions",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ]
+}
