@@ -7,6 +7,7 @@ Extension locale [Pi](https://pi.dev/) minimale pour activer le service tier pri
 - `/fast on` : active le fast mode pour le modèle courant.
 - `/fast off` : le désactive pour le modèle courant.
 - `/fast status` : affiche l'état courant.
+- `--fast` : active le fast mode dès le lancement, y compris avec `-p`.
 - État conservé par `provider/api/model` dans la session Pi.
 - Status bar : `FAST` en `rgb(255, 95, 255)` et `STD` en `rgb(95, 255, 95)`.
 - Injection uniquement si le payload ne définit pas déjà `service_tier`.
@@ -25,6 +26,13 @@ Quand il est actif, l'extension ajoute au payload :
 {
   "service_tier": "priority"
 }
+```
+
+Exemple en mode non interactif :
+
+```bash
+pi --fast --provider openai-codex --model gpt-5.6-luna \
+  --thinking max --approve --no-session --name phase2a-phpcs -p "$prompt"
 ```
 
 Les clés OAuth ou autres credentials ne sont ni lus ni affichés par l'extension ; Pi vérifie seulement le mode d'authentification du modèle courant via son API interne.

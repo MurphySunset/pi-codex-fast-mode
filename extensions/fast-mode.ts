@@ -135,18 +135,35 @@ function notifyStatus(states: Map<string, boolean>, ctx: ExtensionContext): void
 export default function fastMode(pi: ExtensionAPI): void {
   const states = new Map<string, boolean>();
 
+  pi.registerFlag("fast", {
+    description: "Start with Codex fast mode (priority service tier)",
+    type: "boolean",
+    default: false,
+  });
+
+  const refreshStatus = (ctx: ExtensionContext): void => {
+    // A CLI flag acts as the default for each model that has not been
+    // explicitly configured with /fast on|off in the current session.
+    if (pi.getFlag("fast") === true) {
+      const key = getModelKey(ctx.model);
+      if (key && !states.has(key)) states.set(key, true);
+    }
+
+    updateStatus(states, ctx);
+  };
+
   pi.on("session_start", (_event, ctx) => {
     restoreState(states, ctx);
-    updateStatus(states, ctx);
+    refreshStatus(ctx);
   });
 
   pi.on("session_tree", (_event, ctx) => {
     restoreState(states, ctx);
-    updateStatus(states, ctx);
+    refreshStatus(ctx);
   });
 
   pi.on("model_select", (_event, ctx) => {
-    updateStatus(states, ctx);
+    refreshStatus(ctx);
   });
 
   pi.on("session_shutdown", (_event, ctx) => {
@@ -155,7 +172,7 @@ export default function fastMode(pi: ExtensionAPI): void {
   });
 
   pi.on("before_provider_request", (event, ctx) => {
-    updateStatus(states, ctx);
+    refreshStatus(ctx);
 
     if (!isFastActive(states, ctx)) return undefined;
     if (!isRecord(event.payload) || event.payload.model !== ctx.model?.id) return undefined;
@@ -185,6 +202,7 @@ export default function fastMode(pi: ExtensionAPI): void {
       }
 
       if (action === "status") {
+        refreshStatus(ctx);
         notifyStatus(states, ctx);
         return;
       }
